@@ -1,5 +1,5 @@
 # Changes done
-
+# Feature for different path algo.
 
 import pygame as pg
 from collections import deque
