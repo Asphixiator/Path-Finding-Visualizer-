@@ -1,3 +1,6 @@
+# Changes done
+
+
 import pygame as pg
 from collections import deque
 from queue import PriorityQueue
@@ -99,10 +102,11 @@ def h(p1, p2):
 
 
 def trace_path(came_from, cur, draw):
-	while cur in came_from:
-		cur = came_from[cur]
-		cur.make_path()
-		draw()
+    while cur in came_from:
+        cur = came_from[cur]
+        cur.make_path()
+        draw()
+
 
 def astar(draw, grid, start, end):
     count = 0
@@ -128,9 +132,9 @@ def astar(draw, grid, start, end):
         frontier_hash.remove(cur)
 
         if cur == end:
-        	trace_path(came_from, end, draw)
-        	end.make_end()
-        	return True
+            trace_path(came_from, end, draw)
+            end.make_end()
+            return True
 
         for neighbour in cur.neighbours:
             temp_g_score = g_score[cur] + 1
@@ -138,7 +142,8 @@ def astar(draw, grid, start, end):
             if temp_g_score < g_score[neighbour]:
                 g_score[neighbour] = temp_g_score
                 came_from[neighbour] = cur
-                f_score[neighbour] = temp_g_score + h(neighbour.get_pos(), end.get_pos())
+                f_score[neighbour] = temp_g_score + \
+                    h(neighbour.get_pos(), end.get_pos())
 
                 if neighbour not in frontier_hash:
                     count += 1
@@ -151,7 +156,8 @@ def astar(draw, grid, start, end):
         if cur != start:
             cur.make_close()
 
-    return False 
+    return False
+
 
 def make_grid(rows, width):
     grid = []
@@ -254,9 +260,9 @@ def main(win, width):
                           grid, start, end)
 
                 if event.key == pg.K_ESCAPE:
-                	start = None
-                	end = None
-                	grid = make_grid(ROWS, WIDTH)
+                    start = None
+                    end = None
+                    grid = make_grid(ROWS, WIDTH)
 
     pg.quit()
 
