@@ -1,5 +1,4 @@
-# Changes done
-# Feature for different path algo.
+# Adding and testing bfs algo.
 
 import pygame as pg
 from collections import deque
@@ -106,6 +105,36 @@ def trace_path(came_from, cur, draw):
         cur = came_from[cur]
         cur.make_path()
         draw()
+
+
+def bfs(draw, grid, start, end):
+    frontier = deque()
+    came_from = dict()
+
+    frontier.append(start)
+    while len(frontier) > 0:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+        
+        cur = frontier.popleft()
+        if cur == end:
+            trace_path(came_from, cur, draw)
+            end.make_end()
+            return True
+
+        for neighbour in cur.neighbours:
+            if not neighbour.is_close():
+                came_from[neighbour] = cur
+                neighbour.make_open()
+                frontier.append(neighbour)
+
+        draw()    
+        
+        if cur != start:
+            cur.make_close()
+
+    return False
 
 
 def astar(draw, grid, start, end):
@@ -256,8 +285,10 @@ def main(win, width):
                         for node in row:
                             node.update_neighbours(grid)
 
-                    astar(lambda: draw(win, grid, ROWS, width),
-                          grid, start, end)
+                    # astar(lambda: draw(win, grid, ROWS, width),
+                    #       grid, start, end)
+
+                    bfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
 
                 if event.key == pg.K_ESCAPE:
                     start = None
