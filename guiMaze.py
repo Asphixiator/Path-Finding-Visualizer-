@@ -116,7 +116,7 @@ def bfs(draw, grid, start, end):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
-        
+
         cur = frontier.popleft()
         if cur == end:
             trace_path(came_from, cur, draw)
@@ -129,8 +129,8 @@ def bfs(draw, grid, start, end):
                 neighbour.make_open()
                 frontier.append(neighbour)
 
-        draw()    
-        
+        draw()
+
         if cur != start:
             cur.make_close()
 
@@ -290,6 +290,7 @@ def main(win, width):
 
                     bfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
 
+            if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     start = None
                     end = None
