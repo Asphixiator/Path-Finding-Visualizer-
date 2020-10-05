@@ -1,6 +1,7 @@
 # Adding and testing bfs algo.
 
 import pygame as pg
+import sys
 from collections import deque
 from queue import PriorityQueue
 
@@ -93,18 +94,47 @@ class Node:
         return False
 
 
-def h(p1, p2):
-    x1, y1 = p1
-    x2, y2 = p2
-
-    return abs(x2 - x1) + abs(y2 - y1)
-
-
 def trace_path(came_from, cur, draw):
+    print("Entered trace path")
     while cur in came_from:
         cur = came_from[cur]
         cur.make_path()
         draw()
+    print("Exiting trace path")
+
+
+def dfs(draw, grid, start, end):
+    frontier = list()
+    came_from = dict()
+
+    frontier.append(start)
+    while len(frontier) > 0:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+
+        cur = frontier.pop()
+        try:
+            if cur == end:
+                trace_path(came_from, cur, draw)
+                end.make_end()
+                # print("End found!!")
+                return True
+        except:
+            return True
+
+        for neighbour in cur.neighbours:
+            if not neighbour.is_close():
+                came_from[neighbour] = cur
+                neighbour.make_open()
+                frontier.append(neighbour)
+
+        draw()
+
+        if cur != start:
+            cur.make_close()
+
+    return False
 
 
 def bfs(draw, grid, start, end):
@@ -112,7 +142,7 @@ def bfs(draw, grid, start, end):
     came_from = dict()
 
     frontier.append(start)
-    while len(frontier) > 0:
+    while frontier:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
@@ -135,6 +165,13 @@ def bfs(draw, grid, start, end):
             cur.make_close()
 
     return False
+
+
+def h(p1, p2):
+    x1, y1 = p1
+    x2, y2 = p2
+
+    return abs(x2 - x1) + abs(y2 - y1)
 
 
 def astar(draw, grid, start, end):
@@ -288,9 +325,11 @@ def main(win, width):
                     # astar(lambda: draw(win, grid, ROWS, width),
                     #       grid, start, end)
 
-                    bfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
+                    # bfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
 
-            if event.type == pg.KEYDOWN:
+                    dfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
+                    # print("Returned back safely")
+
                 if event.key == pg.K_ESCAPE:
                     start = None
                     end = None
