@@ -23,6 +23,7 @@ pg.display.set_caption("Pygame Mazy")
 class Node:
 
     def __init__(self, row, col, width, total_rows):
+        self.flag = False
         self.row = row
         self.col = col
         self.x = row * width
@@ -71,6 +72,15 @@ class Node:
     def make_path(self):
         self.color = PURPLE
 
+    def mark_start(self):
+        self.flag = True
+
+    def remove_mark_start(self):
+        self.flag = False
+
+    # def get_color(self):
+    #     return self.color
+
     def draw(self, win):
         pg.draw.rect(win, self.color, (self.x, self.y, self.width, self.width))
 
@@ -97,9 +107,16 @@ class Node:
 def trace_path(came_from, cur, draw):
     print("Entered trace path")
     while cur in came_from:
+        # x_start = False
+        # if cur.is_start:
+        #     x_start = True
         cur = came_from[cur]
         cur.make_path()
         draw()
+        # if x_start:
+        #     print("Exiting trace path")
+        #     return True
+
     print("Exiting trace path")
 
 
@@ -295,6 +312,7 @@ def main(win, width):
                 if not start and node != end:
                     start = node
                     start.make_start()
+                    start.mark_start()
 
                 elif not end and node != start:
                     end = node
@@ -312,6 +330,7 @@ def main(win, width):
 
                 if node == start:
                     start = None
+                    node.remove_mark_start()
 
                 elif node == end:
                     end = None
@@ -322,12 +341,12 @@ def main(win, width):
                         for node in row:
                             node.update_neighbours(grid)
 
-                    # astar(lambda: draw(win, grid, ROWS, width),
-                    #       grid, start, end)
+                    astar(lambda: draw(win, grid, ROWS, width),
+                          grid, start, end)
 
                     # bfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
 
-                    dfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
+                    # dfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
                     # print("Returned back safely")
 
                 if event.key == pg.K_ESCAPE:
