@@ -107,15 +107,12 @@ class Node:
 def trace_path(came_from, cur, draw):
     print("Entered trace path")
     while cur in came_from:
-        # x_start = False
-        # if cur.is_start:
-        #     x_start = True
         cur = came_from[cur]
         cur.make_path()
         draw()
-        # if x_start:
-        #     print("Exiting trace path")
-        #     return True
+        if cur.flag == True:
+            print("Exiting trace path")
+            return True
 
     print("Exiting trace path")
 
@@ -341,10 +338,10 @@ def main(win, width):
                         for node in row:
                             node.update_neighbours(grid)
 
-                    astar(lambda: draw(win, grid, ROWS, width),
-                          grid, start, end)
+                    # astar(lambda: draw(win, grid, ROWS, width),
+                        #   grid, start, end)
 
-                    # bfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
+                    bfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
 
                     # dfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
                     # print("Returned back safely")
